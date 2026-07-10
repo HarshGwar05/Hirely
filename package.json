@@ -1,0 +1,26 @@
+{
+  "name": "hirely",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "Harsh",
+  "license": "ISC",
+  "dependencies": {
+    "@google/genai": "^2.11.0",
+    "dotenv": "^17.4.2",
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "multer": "^2.2.0",
+    "mysql2": "^3.22.6",
+    "pdf-parse": "^2.4.5",
+    "uuid": "^14.0.1",
+    "zod": "^4.4.3"
+  }
+}
