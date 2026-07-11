@@ -50,11 +50,9 @@ body{
 
     gap:10px;
 
-    padding:10px 5px;
+    padding:10px;
 
     border-bottom:1px solid #eee;
-
-    cursor:pointer;
 
 }
 
@@ -68,13 +66,51 @@ body{
 
     flex:1;
 
+    overflow:hidden;
+
+    white-space:nowrap;
+
+    text-overflow:ellipsis;
+
+    font-size:15px;
+
 }
 
-.resume-time{
+.resume-info{
 
-    color:gray;
+    flex:1;
 
-    font-size:12px;
+    min-width:0;
+
+}
+
+.delete-form{
+
+    margin:0;
+
+}
+
+.delete-btn{
+
+    border:none;
+
+    background:transparent;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    opacity:.5;
+
+    transition:.2s;
+
+}
+
+.delete-btn:hover{
+
+    opacity:1;
+
+    transform:scale(1.15);
 
 }
 

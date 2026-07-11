@@ -9,6 +9,7 @@ import dashboardRoutes from "./routes/dashboardRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
 import screeningRoutes from "./routes/screeningRoutes.js";
 import progressRoutes from "./routes/progressRoutes.js";
+import methodOverride from "method-override";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ const __dirname = path.dirname(__filename);
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(methodOverride("_method"));
 
 
 

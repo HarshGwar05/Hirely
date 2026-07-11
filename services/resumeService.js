@@ -9,8 +9,7 @@ export const getAllResumes = async () => {
             status,
             uploaded_at
         FROM Resume
-        WHERE is_archived = FALSE
-        ORDER BY uploaded_at DESC;
+        ORDER BY is_archived ASC, uploaded_at DESC;
     `);
 
     return rows;
@@ -19,7 +18,7 @@ export const getAllResumes = async () => {
 
 import { v4 as uuid } from "uuid";
 
-export const saveResume = async (file) => {
+export const saveResume = async (file, fileHash) => {
 
     const resumeId = uuid();
     const storagePath = file.path.replace(/\\/g, "/");
@@ -28,23 +27,144 @@ export const saveResume = async (file) => {
         `
         INSERT INTO Resume
         (
-             resume_id,
-        original_name,
-        storage_path,
-        mime_type,
-        status
+            resume_id,
+            original_name,
+            storage_path,
+            file_hash,
+            mime_type,
+            status
         )
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?)
         `,
         [
-             resumeId,
-        file.originalname,
-        storagePath,
-        file.mimetype,
-        "UPLOADED"
+            resumeId,
+            file.originalname,
+            storagePath,
+            fileHash,
+            file.mimetype,
+            "UPLOADED"
         ]
     );
 
     return resumeId;
+
+};
+
+export const getResumeByHash = async (fileHash) => {
+
+    const [rows] = await connection.query(
+        `
+        SELECT resume_id
+        FROM Resume
+        WHERE file_hash = ?
+        LIMIT 1
+        `,
+        [fileHash]
+    );
+
+    return rows[0] || null;
+
+};
+
+export const saveParsedResume = async (
+    resumeId,
+    rawText
+) => {
+
+    await connection.query(
+        `
+        INSERT INTO ParsedResume
+        (
+            parsed_id,
+            resume_id,
+            raw_text,
+            parsed_data
+        )
+        VALUES (?, ?, ?, ?)
+        `,
+        [
+            uuid(),
+            resumeId,
+            rawText,
+            JSON.stringify({})
+        ]
+    );
+
+};
+
+export const markResumeParsed = async (resumeId) => {
+
+    await connection.query(
+        `
+        UPDATE Resume
+        SET status = 'PARSED'
+        WHERE resume_id = ?
+        `,
+        [resumeId]
+    );
+
+};
+
+export const isResumeUsed = async (resumeId) => {
+
+    const [rows] = await connection.query(
+        `
+        SELECT COUNT(*) AS count
+        FROM ScreeningResume
+        WHERE resume_id = ?
+        `,
+        [resumeId]
+    );
+
+    return rows[0].count > 0;
+
+};
+
+export const archiveResume = async (resumeId) => {
+
+    await connection.query(
+        `
+        UPDATE Resume
+        SET is_archived = TRUE
+        WHERE resume_id = ?
+        `,
+        [resumeId]
+    );
+
+};
+
+export const getResumeById = async (resumeId) => {
+
+    const [rows] = await connection.query(
+        `
+        SELECT storage_path
+        FROM Resume
+        WHERE resume_id = ?
+        LIMIT 1
+        `,
+        [resumeId]
+    );
+
+    return rows[0] || null;
+
+};
+
+export const deleteResumeById = async (resumeId) => {
+
+    await connection.query(
+        `
+        DELETE FROM ParsedResume
+        WHERE resume_id = ?
+        `,
+        [resumeId]
+    );
+
+    await connection.query(
+        `
+        DELETE FROM Resume
+        WHERE resume_id = ?
+        `,
+        [resumeId]
+    );
 
 };
