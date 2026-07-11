@@ -72,3 +72,71 @@ export const createScreening = async (
     }
 
 };
+
+export const updateScreeningStatus = async (
+    screeningId,
+    status
+) => {
+
+    await connection.query(
+        `
+        UPDATE Screening
+        SET status = ?
+        WHERE screening_id = ?
+        `,
+        [
+            status,
+            screeningId
+        ]
+    );
+
+};
+
+export const updateScreeningResumeStatus = async (
+    screeningResumeId,
+    status
+) => {
+
+    await connection.query(
+        `
+        UPDATE ScreeningResume
+        SET processing_status = ?
+        WHERE screening_resume_id = ?
+        `,
+        [
+            status,
+            screeningResumeId
+        ]
+    );
+
+};
+
+export const incrementCompletedResumes = async (
+    screeningId
+) => {
+
+    await connection.query(
+        `
+        UPDATE Screening
+        SET completed_resumes = completed_resumes + 1
+        WHERE screening_id = ?
+        `,
+        [screeningId]
+    );
+
+};
+
+export const incrementFailedResumes = async (
+    screeningId
+) => {
+
+    await connection.query(
+        `
+        UPDATE Screening
+        SET failed_resumes = failed_resumes + 1
+        WHERE screening_id = ?
+        `,
+        [screeningId]
+    );
+
+};

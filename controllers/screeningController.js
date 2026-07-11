@@ -1,4 +1,5 @@
 import { createScreening } from "../services/screeningService.js";
+import { processScreening } from "../services/screeningProcessingService.js";
 
 export const startScreening = async (req, res) => {
 
@@ -32,6 +33,9 @@ export const startScreening = async (req, res) => {
             selectedResumeIds
 
         );
+
+        processScreening(screeningId)
+        .catch(console.error);
 
         res.json({
 

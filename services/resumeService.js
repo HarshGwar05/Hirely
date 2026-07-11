@@ -3,13 +3,14 @@ import connection from "../config/db.js";
 export const getAllResumes = async () => {
 
     const [rows] = await connection.query(`
-        SELECT
-            resume_id,
-            original_name,
-            status,
-            uploaded_at
-        FROM Resume
-        ORDER BY is_archived ASC, uploaded_at DESC;
+       SELECT
+    resume_id,
+    original_name,
+    status,
+    is_archived,
+    uploaded_at
+FROM Resume
+ORDER BY is_archived ASC, uploaded_at DESC;
     `);
 
     return rows;
@@ -166,5 +167,59 @@ export const deleteResumeById = async (resumeId) => {
         `,
         [resumeId]
     );
+
+};
+
+export const updateParsedData = async (
+    resumeId,
+    parsedData
+) => {
+
+    await connection.query(
+        `
+        UPDATE ParsedResume
+        SET parsed_data = ?
+        WHERE resume_id = ?
+        `,
+        [
+            JSON.stringify(parsedData),
+            resumeId
+        ]
+    );
+
+};
+
+export const getParsedResume = async (resumeId) => {
+
+    const [rows] = await connection.query(
+        `
+        SELECT
+            raw_text,
+            parsed_data
+        FROM ParsedResume
+        WHERE resume_id = ?
+        LIMIT 1
+        `,
+        [resumeId]
+    );
+
+    return rows[0] || null;
+
+};
+
+export const getScreeningResumes = async (screeningId) => {
+
+    const [rows] = await connection.query(
+        `
+        SELECT
+            sr.screening_resume_id,
+            sr.resume_id
+        FROM ScreeningResume sr
+        WHERE sr.screening_id = ?
+        `,
+        [screeningId]
+    );
+
+    return rows;
 
 };
