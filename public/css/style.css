@@ -1,0 +1,217 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f4f4;
+}
+
+.container{
+    display:flex;
+    height:100vh;
+}
+
+.sidebar{
+    width:320px;
+    background:white;
+    border-right:1px solid #ddd;
+    padding:20px;
+
+    display:flex;
+    flex-direction:column;
+}
+
+.sidebar h2{
+    margin-bottom:20px;
+}
+
+.selected-count{
+    margin-bottom:20px;
+}
+
+.search-box{
+    padding:10px;
+    margin-bottom:20px;
+}
+
+.resume-list{
+    flex:1;
+    overflow-y:auto;
+}
+
+.resume-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:10px 5px;
+
+    border-bottom:1px solid #eee;
+
+    cursor:pointer;
+
+}
+
+.resume-item:hover{
+
+    background:#f8f8f8;
+
+}
+
+.resume-name{
+
+    flex:1;
+
+}
+
+.resume-time{
+
+    color:gray;
+
+    font-size:12px;
+
+}
+
+.status{
+
+   display:inline-block;
+
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+    margin-right:10px;
+
+    flex-shrink:0;
+
+}
+
+.parsed{
+
+    background:#2ecc71;
+
+}
+
+.uploaded{
+
+    background:#f1c40f;
+
+}
+
+.failed{
+
+    background:#e74c3c;
+
+}
+
+.archived{
+
+    margin:20px 0;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+}
+
+.upload-btn{
+
+    padding:12px;
+
+    cursor:pointer;
+
+}
+
+.pending{
+    background:#95a5a6;
+}
+
+.screening-btn{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:12px;
+
+    cursor:pointer;
+
+}
+
+.screening-btn:disabled{
+
+    opacity:.5;
+
+    cursor:not-allowed;
+
+}
+
+
+ /* css for dashboard.ejs */ 
+
+ .dashboard{
+
+    flex:1;
+
+    padding:40px;
+
+    background:#f8f9fa;
+
+}
+
+.form-group{
+
+    margin-bottom:25px;
+
+}
+
+.form-group label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-weight:bold;
+
+}
+
+.form-group input,
+.form-group textarea{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+}
+
+#analyseBtn{
+
+    margin-top:20px;
+
+    padding:14px 28px;
+
+    cursor:pointer;
+
+}
+
+#analyseBtn:disabled{
+
+    opacity:.5;
+
+    cursor:not-allowed;
+
+}

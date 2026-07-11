@@ -4,32 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Hirely</title>
+
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 
-    <h1>Hirely</h1>
+    <div class="container">
 
-    <p>Smart Resume Screening Platform</p>
+        <%- include("partials/sidebar") %>
 
-    <hr>
+        <%- include("partials/dashboard") %>
 
-    <h3>Dashboard</h3>
+    </div>
 
-    <p>
-        Resume Library :
-        <strong><%= totalResumes %></strong>
-    </p>
-
-    <p>
-        Screening Sessions :
-        <strong><%= totalScreenings %></strong>
-    </p>
-
-    <button>
-        Start New Screening
-    </button>
-
+    <script src="/js/upload.js"></script>
+    <script src="/js/selection.js"></script>
+    <script src="/js/screening.js"></script>
 </body>
 
 </html>

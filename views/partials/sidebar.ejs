@@ -1,0 +1,84 @@
+<div class="sidebar">
+
+    <h2>Resume Library</h2>
+
+    <div class="selected-count">
+        Selected : <strong id="selectedCount">0</strong>
+    </div>
+
+    <input
+        type="text"
+        placeholder="🔍 Search Resume..."
+        class="search-box"
+    >
+
+    <div class="resume-list">
+
+        <% resumes.forEach(resume => { %>
+
+            <div class="resume-item">
+
+                <input
+                    class="resume-checkbox"
+                    type="checkbox"
+                    value="<%= resume.resume_id %>"
+                >
+
+                <span class="status <%= resume.status.toLowerCase() %>"></span>
+                
+                
+                <span class="resume-name">
+                    <%= resume.original_name %>
+                </span>
+
+                <span class="resume-time">
+                    <%= new Date(resume.uploaded_at).toLocaleDateString() %>
+                </span>
+
+            </div>
+
+        <% }) %>
+
+    </div>
+
+    <div class="archived">
+
+        ▶ Archived (0)
+
+    </div>
+
+    <form
+    class="upload-form"
+    action="/resumes/upload"
+    method="POST"
+    enctype="multipart/form-data"
+>
+
+    <input
+        type="file"
+        id="resumeInput"
+        name="resumes"
+        accept=".pdf"
+        multiple
+        hidden
+    >
+
+    <button
+        type="button"
+        class="upload-btn"
+        onclick="document.getElementById('resumeInput').click()"
+    >
+        + Upload Resume
+    </button>
+
+</form>
+
+    <button
+        id="startScreeningBtn"
+        class="screening-btn"
+        disabled
+    >
+        Start Screening
+    </button>
+
+</div>

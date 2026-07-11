@@ -6,6 +6,9 @@ import morgan from "morgan";
 import connection from "./config/db.js";
 import healthRoutes from "./routes/healthRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
+import resumeRoutes from "./routes/resumeRoutes.js";
+import screeningRoutes from "./routes/screeningRoutes.js";
+import progressRoutes from "./routes/progressRoutes.js";
 
 dotenv.config();
 
@@ -23,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
+
 // View Engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -33,6 +37,9 @@ app.use(express.static(path.join(__dirname, "public")));
 // Home Route
 app.use("/", dashboardRoutes);
 app.use("/health", healthRoutes);
+app.use("/resumes", resumeRoutes);
+app.use("/screenings", screeningRoutes);
+app.use("/screenings", progressRoutes);
 
 app.listen(PORT, () => {
     console.log(`🚀 Hirely running on http://localhost:${PORT}`);
