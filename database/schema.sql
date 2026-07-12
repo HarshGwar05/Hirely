@@ -138,3 +138,5 @@ CREATE TABLE ScreeningResult (
         ON DELETE CASCADE
 );
 
+ALTER TABLE ScreeningResult
+MODIFY COLUMN score DECIMAL(4,2) NOT NULL;

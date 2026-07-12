@@ -140,3 +140,84 @@ export const incrementFailedResumes = async (
     );
 
 };
+
+
+export const getScreening = async (screeningId) => {
+
+    const [rows] = await connection.query(
+        `
+        SELECT
+            screening_id,
+            job_title,
+            job_description
+        FROM Screening
+        WHERE screening_id = ?
+        LIMIT 1
+        `,
+        [screeningId]
+    );
+
+    return rows[0] || null;
+
+};
+
+export const getScreeningResume = async (
+    screeningResumeId
+) => {
+
+    const [rows] = await connection.query(
+        `
+        SELECT
+            screening_resume_id,
+            screening_id,
+            resume_id
+        FROM ScreeningResume
+        WHERE screening_resume_id = ?
+        LIMIT 1
+        `,
+        [screeningResumeId]
+    );
+
+    return rows[0] || null;
+
+};
+
+export const saveScreeningResult = async (
+    screeningResumeId,
+    result
+) => {
+
+    await connection.query(
+        `
+        INSERT INTO ScreeningResult
+        (
+            result_id,
+            screening_resume_id,
+            score,
+            decision,
+            confidence,
+            requirement_coverage,
+            analysis_json
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        `,
+        [
+            uuid(),
+            screeningResumeId,
+            result.score,
+            result.decision,
+            result.confidence,
+            result.requirement_coverage,
+            JSON.stringify({
+                summary: result.summary,
+                strengths: result.strengths,
+                weaknesses: result.weaknesses,
+                missing_skills: result.missing_skills,
+                interview_questions: result.interview_questions,
+                improvement_suggestions: result.improvement_suggestions,
+                evidence: result.evidence
+            })
+        ]
+    );
+
+};

@@ -9,10 +9,13 @@ import {
     getResumeById,
     isResumeUsed,
     archiveResume,
-    deleteResumeById
+    deleteResumeById,
+    updateParsedData
 } from "../services/resumeService.js";
 
 import { extractResumeText } from "../services/parseResumeService.js";
+
+import { extractCandidate } from "../services/candidateExtractionService.js";
 
 export const uploadResumes = async (req, res) => {
 
@@ -48,16 +51,48 @@ export const uploadResumes = async (req, res) => {
                 fileHash
             );
 
-            const rawText = await extractResumeText(file.path);
+            const rawText = await extractResumeText(
+    file.path
+);
 
-            await saveParsedResume(
-                resumeId,
-                rawText
-            );
+await saveParsedResume(
+    resumeId,
+    rawText
+);
 
-            await markResumeParsed(
-                resumeId
-            );
+console.log(`Running Stage 1 AI for ${file.originalname}`);
+
+try {
+
+    const candidateProfile = await extractCandidate(rawText);
+
+    console.log(
+        "Stage 1 response:",
+        JSON.stringify(candidateProfile, null, 2)
+    );
+
+    await updateParsedData(
+        resumeId,
+        candidateProfile
+    );
+
+    console.log(
+        `Parsed data saved for ${file.originalname}`
+    );
+
+    await markResumeParsed(
+        resumeId
+    );
+
+} catch (err) {
+
+    console.error(
+        `Stage 1 failed for ${file.originalname}`
+    );
+
+    console.error(err);
+
+}
 
         }
 

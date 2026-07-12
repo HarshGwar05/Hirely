@@ -1,5 +1,7 @@
+import { processMatching } from "./matchingService.js";
 import {
-    getScreeningResumes
+     getScreeningResumes,
+    getParsedResume
 } from "./resumeService.js";
 
 import {
@@ -9,7 +11,9 @@ import {
     incrementFailedResumes
 } from "./screeningService.js";
 
+
 export const processScreening = async (screeningId) => {
+    console.log("PROCESS SCREENING STARTED:",screeningId);
 
     try {
 
@@ -27,23 +31,77 @@ export const processScreening = async (screeningId) => {
             try {
 
                 await updateScreeningResumeStatus(
-                    resume.screening_resume_id,
-                    "PARSING"
-                );
+    resume.screening_resume_id,
+    "PARSING"
+);
 
-                // Temporary delay
-                await new Promise(resolve =>
-                    setTimeout(resolve, 1000)
-                );
+const parsedResume = await getParsedResume(
+    resume.resume_id
+);
+
+if (!parsedResume) {
+
+    console.log(
+        `ParsedResume missing for ${resume.resume_id}`
+    );
+
+    await updateScreeningResumeStatus(
+        resume.screening_resume_id,
+        "FAILED"
+    );
+
+    await incrementFailedResumes(
+        screeningId
+    );
+
+    continue;
+
+}
+
+const candidateProfile =
+    typeof parsedResume.parsed_data === "string"
+        ? JSON.parse(parsedResume.parsed_data)
+        : parsedResume.parsed_data;
+
+if (
+    !candidateProfile ||
+    Object.keys(candidateProfile).length === 0
+) {
+
+    console.log(
+        `Candidate profile missing for ${resume.resume_id}`
+    );
+
+    await updateScreeningResumeStatus(
+        resume.screening_resume_id,
+        "FAILED"
+    );
+
+    await incrementFailedResumes(
+        screeningId
+    );
+
+    continue;
+
+} 
 
                 await updateScreeningResumeStatus(
                     resume.screening_resume_id,
                     "MATCHING"
                 );
+                
+                console.log("Calling Stage 2:", resume.screening_resume_id);
+                
+                await processMatching(
 
-                await new Promise(resolve =>
-                    setTimeout(resolve, 1000)
+                    screeningId,
+
+                    resume.screening_resume_id,
+
+                    candidateProfile
+
                 );
+                console.log("Stage 2 Finished:", resume.screening_resume_id);
 
                 await updateScreeningResumeStatus(
                     resume.screening_resume_id,
@@ -56,18 +114,19 @@ export const processScreening = async (screeningId) => {
 
             } catch (err) {
 
-                console.error(err);
+    console.error("STAGE 2 FAILED");
+    console.error(err);
 
-                await updateScreeningResumeStatus(
-                    resume.screening_resume_id,
-                    "FAILED"
-                );
+    await updateScreeningResumeStatus(
+        resume.screening_resume_id,
+        "FAILED"
+    );
 
-                await incrementFailedResumes(
-                    screeningId
-                );
+    await incrementFailedResumes(
+        screeningId
+    );
 
-            }
+}
 
         }
 
@@ -88,3 +147,4 @@ export const processScreening = async (screeningId) => {
     }
 
 };
+
