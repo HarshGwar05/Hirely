@@ -78,24 +78,39 @@
 
             <div class="resume-item">
 
-                <span class="status <%= resume.status.toLowerCase() %>"></span>
+    <span class="status <%= resume.status.toLowerCase() %>"></span>
 
-                <div class="resume-info">
+    <div class="resume-info">
 
-                    <span
-                        class="resume-name"
-                        title="<%= resume.original_name %>"
-                    >
-                        <%= resume.original_name %>
-                    </span>
+        <span
+            class="resume-name"
+            title="<%= resume.original_name %>"
+        >
+            <%= resume.original_name %>
+        </span>
 
-                    <div style="font-size:11px;color:#777;">
-                        <%= new Date(resume.uploaded_at).toLocaleDateString() %>
-                    </div>
+        <div style="font-size:11px;color:#777;">
+            <%= new Date(resume.uploaded_at).toLocaleDateString() %>
+        </div>
 
-                </div>
+    </div>
 
-            </div>
+    <form
+        action="/resumes/<%= resume.resume_id %>/restore"
+        method="POST"
+    >
+
+        <button
+            type="submit"
+            class="restore-btn"
+            title="Restore Resume"
+        >
+            ↩ Restore
+        </button>
+
+    </form>
+
+</div>
 
         <% }) %>
 

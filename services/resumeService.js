@@ -223,3 +223,18 @@ export const getScreeningResumes = async (screeningId) => {
     return rows;
 
 };
+
+export const restoreResume = async (resumeId) => {
+
+    await connection.query(
+        `
+        UPDATE Resume
+        SET
+            is_archived = FALSE,
+            status = 'PARSED'
+        WHERE resume_id = ?
+        `,
+        [resumeId]
+    );
+
+};

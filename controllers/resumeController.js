@@ -10,7 +10,8 @@ import {
     isResumeUsed,
     archiveResume,
     deleteResumeById,
-    updateParsedData
+    updateParsedData,
+    restoreResume
 } from "../services/resumeService.js";
 
 import { extractResumeText } from "../services/parseResumeService.js";
@@ -141,6 +142,26 @@ export const deleteResume = async (req, res) => {
         console.error(err);
 
         res.status(500).send("Failed to delete resume.");
+
+    }
+
+};
+
+export const restoreArchivedResume = async (req, res) => {
+
+    try {
+
+        const { resumeId } = req.params;
+
+        await restoreResume(resumeId);
+
+        res.redirect("/");
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).send("Failed to restore resume.");
 
     }
 
