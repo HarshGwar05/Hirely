@@ -101,24 +101,21 @@ export const matchCandidateWithJob = async (
     jobDescription
 ) => {
 
-    const prompt = `
+const prompt = `
 You are an expert ATS recruiter.
 
 You will receive:
-
 1. A structured candidate profile.
 2. A job description.
 
-Evaluate how well the candidate matches the job.
+Evaluate the candidate strictly against the job description.
 
 Return ONLY valid JSON.
-
-Do not include markdown.
-Do not include explanations.
-Do not wrap inside \`\`\`.
+No markdown.
+No explanations.
+No code fences.
 
 JSON Schema:
-
 {
   "score": 0.0,
   "decision": "",
@@ -138,29 +135,50 @@ JSON Schema:
   ]
 }
 
-IMPORTANT SCORING RULES
+Rules:
 
-- Score must be a decimal number between 0.00 and 10.00.
-- Use two decimal places whenever appropriate.
-- 10.00 = perfect match.
-- 8.00-9.99 = excellent match.
-- 6.00-7.99 = good match.
-- 4.00-5.99 = average match.
-- Below 4.00 = poor match.
+- score: decimal between 0.0 and 10.0 using increments of 0.5 only.
+  10 = Exceptional fit
+  9 = Excellent
+  8 = Strong
+  7 = Good
+  6 = Acceptable
+  5 = Average
+  4 = Weak
+  2-3.5 = Poor
+  0-1.5 = No meaningful match
 
-Decision must be one of:
+- decision:
+  9.0-10.0 -> STRONG_MATCH
+  7.0-8.5 -> GOOD_MATCH
+  5.0-6.5 -> REVIEW
+  0.0-4.5 -> REJECT
 
-STRONG_MATCH
-GOOD_MATCH
-REVIEW
-REJECT
+- confidence represents confidence in YOUR evaluation, NOT candidate quality.
+  Use ONLY:
+  20, 40, 60, 75, 90, 100
+
+  100 = Clear evidence for nearly all conclusions.
+  90 = Strong evidence with minor assumptions.
+  75 = Some assumptions required.
+  60 = Limited evidence.
+  40 = Weak evidence.
+  20 = Mostly guessing.
+
+- requirement_coverage: percentage (0-100) of explicit job requirements satisfied.
+
+- decision must always match the score.
+
+- Keep summary under 70 words.
+
+- strengths, weaknesses, missing_skills, interview_questions and improvement_suggestions should contain 2-5 concise items.
+
+- evidence should map each important job requirement to supporting resume evidence.
 
 Candidate Profile:
-
-${JSON.stringify(candidateProfile, null, 2)}
+${JSON.stringify(candidateProfile)}
 
 Job Description:
-
 ${jobDescription}
 `;
 

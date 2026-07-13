@@ -52,6 +52,9 @@ if (!response.ok) {
 
 const result = await response.json();
 
+// Allow one reload for this new screening
+sessionStorage.removeItem("progressReloaded");
+
 window.location.href = `/screenings/${result.screeningId}`;
 
 });

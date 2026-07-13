@@ -10,6 +10,7 @@ import resumeRoutes from "./routes/resumeRoutes.js";
 import screeningRoutes from "./routes/screeningRoutes.js";
 import progressRoutes from "./routes/progressRoutes.js";
 import methodOverride from "method-override";
+import historyRoutes from "./routes/historyRoutes.js";
 
 dotenv.config();
 
@@ -42,6 +43,7 @@ app.use("/health", healthRoutes);
 app.use("/resumes", resumeRoutes);
 app.use("/screenings", screeningRoutes);
 app.use("/screenings", progressRoutes);
+app.use("/history",historyRoutes);
 
 app.listen(PORT, () => {
     console.log(`🚀 Hirely running on http://localhost:${PORT}`);

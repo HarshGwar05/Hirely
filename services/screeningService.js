@@ -221,3 +221,24 @@ export const saveScreeningResult = async (
     );
 
 };
+
+export const getScreeningStatusData = async (
+    screeningId
+) => {
+
+    const [rows] = await connection.query(
+        `
+        SELECT
+            status,
+            total_resumes,
+            completed_resumes,
+            failed_resumes
+        FROM Screening
+        WHERE screening_id = ?
+        `,
+        [screeningId]
+    );
+
+    return rows[0];
+
+};

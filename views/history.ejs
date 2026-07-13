@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Screening History</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<h1>Screening History</h1>
+
+<hr>
+
+<% if(screenings.length===0){ %>
+
+<p>No screenings found.</p>
+
+<% } %>
+
+<% screenings.forEach(screening=>{ %>
+
+<div class="history-card">
+
+<h3>
+
+<%= screening.job_title %>
+
+</h3>
+
+<p>
+
+Status :
+
+<b>
+
+<%= screening.status %>
+
+</b>
+
+</p>
+
+<p>
+
+Completed :
+
+<%= screening.completed_resumes %>
+
+/
+
+<%= screening.total_resumes %>
+
+</p>
+
+<p>
+
+Failed :
+
+<%= screening.failed_resumes %>
+
+</p>
+
+<p>
+
+<%= new Date(screening.created_at)
+.toLocaleString() %>
+
+</p>
+
+<button disabled>
+
+View
+
+</button>
+
+</div>
+
+<hr>
+
+<% }) %>
+
+</div>
+
+</body>
+
+</html>

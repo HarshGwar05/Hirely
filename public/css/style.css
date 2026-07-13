@@ -251,3 +251,77 @@ body{
     cursor:not-allowed;
 
 }
+
+.progress-container{
+    margin:20px 0;
+}
+
+.progress-bar{
+    display:flex;
+    width:100%;
+    height:24px;
+    background:#e5e7eb;
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.completed-fill{
+    width:0;
+    background:#22c55e;
+    transition:width .5s ease;
+
+}
+
+.failed-fill{
+    width:0;
+    background:#ef4444;
+    transition:width .5s ease;
+}
+
+#progressText{
+    margin-top:10px;
+    font-weight:bold;
+}
+
+/* history button  */
+.history-btn{
+
+    display:block;
+
+    margin-top:18px;
+
+    padding:12px;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    background:#2563eb;
+
+    color:white;
+
+    border-radius:8px;
+
+    font-weight:bold;
+
+}
+
+.history-btn:hover{
+
+    background:#1d4ed8;
+
+}
+
+.history-card{
+
+    background:white;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+}

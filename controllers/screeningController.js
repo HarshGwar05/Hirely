@@ -1,5 +1,8 @@
 import { createScreening } from "../services/screeningService.js";
 import { processScreening } from "../services/screeningProcessingService.js";
+import {
+    getScreeningStatusData
+} from "../services/screeningService.js";
 
 export const startScreening = async (req, res) => {
 
@@ -52,5 +55,15 @@ export const startScreening = async (req, res) => {
         res.status(500).send("Failed to create screening.");
 
     }
+
+};
+
+export const getScreeningStatus = async (req, res) => {
+
+    const { screeningId } = req.params;
+
+    const screening = await getScreeningStatusData(screeningId);
+
+    res.json(screening);
 
 };
