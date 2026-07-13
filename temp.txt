@@ -1,0 +1,166 @@
+Good. This was the foundation. From here on, we're mostly reusing data that's already in your database.
+
+Next feature: Full AI Report
+
+Flow:
+
+History
+   ↓
+View
+   ↓
+Results Page
+   ↓
+Click Resume
+   ↓
+Full AI Report
+Step 1
+Create a route
+routes/screeningRoutes.js
+
+Add
+
+router.get(
+    "/result/:screeningResumeId",
+    showResultDetails
+);
+Step 2
+controllers/screeningController.js
+
+Import
+
+getResultDetails
+
+from screeningService.
+
+Then create
+
+export const showResultDetails = async (req, res) => {
+
+    try {
+
+        const result = await getResultDetails(
+            req.params.screeningResumeId
+        );
+
+        if (!result) {
+
+            return res.status(404).send("Result not found.");
+
+        }
+
+        res.render("report", {
+
+            result
+
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).send("Internal Server Error");
+
+    }
+
+};
+Step 3
+
+Now we need one SQL query.
+
+Append this to the end of screeningService.js
+
+export const getResultDetails = async (
+    screeningResumeId
+) => {
+
+    const [rows] = await connection.query(
+        `
+        SELECT
+
+            r.original_name,
+
+            sr.score,
+            sr.decision,
+            sr.confidence,
+            sr.requirement_coverage,
+            sr.analysis_json
+
+        FROM ScreeningResult sr
+
+        JOIN ScreeningResume smr
+        ON sr.screening_resume_id = smr.screening_resume_id
+
+        JOIN Resume r
+        ON smr.resume_id = r.resume_id
+
+        WHERE sr.screening_resume_id = ?
+
+        LIMIT 1
+        `,
+        [screeningResumeId]
+    );
+
+    if (rows.length === 0) {
+
+        return null;
+
+    }
+
+    rows[0].analysis_json =
+        JSON.parse(rows[0].analysis_json);
+
+    return rows[0];
+
+};
+Step 4
+
+One small change to the Results page.
+
+Currently your Resume column is
+
+<%= result.original_name %>
+
+Replace it with
+
+<a href="/screenings/result/<%= result.screening_resume_id %>">
+
+    <%= result.original_name %>
+
+</a>
+BUT...
+
+Your current query doesn't return screening_resume_id.
+
+So before continuing, make one small change in getScreeningResults().
+
+Replace
+
+SELECT
+
+    s.job_title,
+    r.resume_id,
+    r.original_name,
+
+with
+
+SELECT
+
+    s.job_title,
+
+    smr.screening_resume_id,
+
+    r.resume_id,
+
+    r.original_name,
+
+That's the only change needed.
+
+Don't create report.ejs yet.
+
+Let's first verify:
+
+Route works
+SQL works
+Resume names become clickable
+
+Once that's confirmed, we'll build report.ejs, which is the final piece and will display everything already stored in analysis_json (summary, strengths, weaknesses, evidence, interview questions, suggestions, etc.).

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Screening Results</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <h1><%= jobTitle %></h1>
+
+    <hr>
+
+    <table class="results-table">
+
+        <thead>
+
+            <tr>
+
+                <th>Resume</th>
+                <th>Score</th>
+                <th>Decision</th>
+                <th>Confidence</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        <% results.forEach(result => { %>
+
+            <tr>
+
+                <td>
+
+                    <a href="/screenings/result/<%= result.screening_resume_id %>">
+
+                    <%= result.original_name %>
+
+                    </a>
+
+                </td>
+
+                <td>
+
+                    <%= result.score %> / 10
+
+                </td>
+
+                <td>
+
+                    <%= result.decision %>
+
+                </td>
+
+                <td>
+
+                    <%= result.confidence %>%
+
+                </td>
+
+            </tr>
+
+        <% }) %>
+
+        </tbody>
+
+    </table>
+
+    <br>
+
+    <a href="/history">
+
+        ← Back to History
+
+    </a>
+
+</div>
+
+</body>
+
+</html>

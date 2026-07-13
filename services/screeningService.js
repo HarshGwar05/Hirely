@@ -242,3 +242,73 @@ export const getScreeningStatusData = async (
     return rows[0];
 
 };
+
+export const getScreeningResults = async (screeningId) => {
+
+    const [rows] = await connection.query(
+        `
+        SELECT
+            s.job_title,
+            smr.screening_resume_id,
+            r.resume_id,
+            r.original_name,
+            sr.score,
+            sr.decision,
+            sr.confidence
+        FROM ScreeningResult sr
+        JOIN ScreeningResume smr
+            ON sr.screening_resume_id = smr.screening_resume_id
+        JOIN Resume r
+            ON smr.resume_id = r.resume_id
+        JOIN Screening s
+            ON smr.screening_id = s.screening_id
+        WHERE smr.screening_id = ?
+        ORDER BY sr.score DESC
+        `,
+        [screeningId]
+    );
+
+    return rows;
+
+};
+
+export const getResultDetails = async (
+    screeningResumeId
+) => {
+
+    const [rows] = await connection.query(
+        `
+        SELECT
+
+            r.original_name,
+
+            sr.score,
+            sr.decision,
+            sr.confidence,
+            sr.requirement_coverage,
+            sr.analysis_json
+
+        FROM ScreeningResult sr
+
+        JOIN ScreeningResume smr
+        ON sr.screening_resume_id = smr.screening_resume_id
+
+        JOIN Resume r
+        ON smr.resume_id = r.resume_id
+
+        WHERE sr.screening_resume_id = ?
+
+        LIMIT 1
+        `,
+        [screeningResumeId]
+    );
+
+    if (rows.length === 0) {
+
+        return null;
+
+    }
+
+    return rows[0];
+
+};

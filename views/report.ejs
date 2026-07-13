@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>AI Report</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<h1><%= result.original_name %></h1>
+
+<hr>
+
+<h2>Overall Evaluation</h2>
+
+<p>
+
+<b>Score :</b>
+
+<%= result.score %> / 10
+
+</p>
+
+<p>
+
+<b>Decision :</b>
+
+<%= result.decision %>
+
+</p>
+
+<p>
+
+<b>Confidence :</b>
+
+<%= result.confidence %>%
+
+</p>
+
+<p>
+
+<b>Requirement Coverage :</b>
+
+<%= result.requirement_coverage %>%
+
+</p>
+
+<hr>
+
+<h2>Summary</h2>
+
+<p>
+
+<%= result.analysis_json.summary %>
+
+</p>
+
+<hr>
+
+<h2>Strengths</h2>
+
+<ul>
+
+<% result.analysis_json.strengths.forEach(item=>{ %>
+
+<li>
+
+<%= item %>
+
+</li>
+
+<% }) %>
+
+</ul>
+
+<hr>
+
+<h2>Weaknesses</h2>
+
+<ul>
+
+<% result.analysis_json.weaknesses.forEach(item=>{ %>
+
+<li>
+
+<%= item %>
+
+</li>
+
+<% }) %>
+
+</ul>
+
+<hr>
+
+<h2>Missing Skills</h2>
+
+<ul>
+
+<% result.analysis_json.missing_skills.forEach(item=>{ %>
+
+<li>
+
+<%= item %>
+
+</li>
+
+<% }) %>
+
+</ul>
+
+<hr>
+
+<h2>Evidence</h2>
+
+<ul>
+
+<% result.analysis_json.evidence.forEach(item=>{ %>
+
+<li>
+
+<b><%= item.requirement %></b>
+
+<br>
+
+<%= item.evidence %>
+
+</li>
+
+<% }) %>
+
+</ul>
+
+<hr>
+
+<h2>Interview Questions</h2>
+
+<ul>
+
+<% result.analysis_json.interview_questions.forEach(item=>{ %>
+
+<li>
+
+<%= item %>
+
+</li>
+
+<% }) %>
+
+</ul>
+
+<hr>
+
+<h2>Improvement Suggestions</h2>
+
+<ul>
+
+<% result.analysis_json.improvement_suggestions.forEach(item=>{ %>
+
+<li>
+
+<%= item %>
+
+</li>
+
+<% }) %>
+
+</ul>
+
+<br>
+
+<a
+href="javascript:history.back()"
+>
+
+← Back
+
+</a>
+
+</div>
+
+</body>
+
+</html>

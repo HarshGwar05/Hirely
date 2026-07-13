@@ -325,3 +325,53 @@ body{
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 
 }
+
+/* see result of a screaning result.ejs */
+.results-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:20px;
+
+}
+
+.results-table th,
+.results-table td{
+
+    padding:12px;
+
+    border-bottom:1px solid #ddd;
+
+    text-align:left;
+
+}
+
+.results-table th{
+
+    background:#f5f5f5;
+
+}
+
+.view-btn{
+
+    display:inline-block;
+
+    padding:8px 16px;
+
+    background:#2563eb;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:6px;
+
+}
+
+.view-btn:hover{
+
+    background:#1d4ed8;
+
+}
