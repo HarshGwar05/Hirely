@@ -15,82 +15,161 @@
 
     <div class="dashboard">
 
-    <h1><%= screening.job_title %></h1>
+    <div class="progress-hero">
 
-    <hr>
+    <div>
 
-    <div class="progress-container">
+        <h1><%= screening.job_title %></h1>
 
-    <div class="progress-bar">
+        <p class="progress-subtitle">
 
-    <div
-        id="completedFill"
-        class="progress-fill completed-fill">
+            AI Resume Screening Progress
+
+        </p>
+
     </div>
 
-    <div
-        id="failedFill"
-        class="progress-fill failed-fill">
+    <div class="progress-status-badge">
+
+        <span id="screeningStatus">
+
+            <%= screening.status %>
+
+        </span>
+
     </div>
 
 </div>
 
-<div id="progressText"></div>
+    <div class="progress-card">
 
-    <div id="progressText">
-        0%
+    <div class="progress-container">
+
+        <div class="progress-bar">
+
+            <div
+                id="completedFill"
+                class="progress-fill completed-fill"
+            ></div>
+
+            <div
+                id="failedFill"
+                class="progress-fill failed-fill"
+            ></div>
+
+        </div>
+
+        <div id="progressText">
+
+            0%
+
+        </div>
+
+    </div>
+
+    <div class="progress-stats">
+
+        <div class="mini-stat">
+
+            <h4>Total</h4>
+
+            <p>
+
+                <%= screening.total_resumes %>
+
+            </p>
+
+        </div>
+
+        <div class="mini-stat">
+
+            <h4>Completed</h4>
+
+            <p id="completedCount">
+
+                <%= screening.completed_resumes %>
+
+            </p>
+
+        </div>
+
+        <div class="mini-stat">
+
+            <h4>Failed</h4>
+
+            <p id="failedCount">
+
+                <%= screening.failed_resumes %>
+
+            </p>
+
+        </div>
+
     </div>
 
 </div>
 
 <hr>
 
-    <h3>Status</h3>
+   
 
-    <p>
-    <strong id="screeningStatus"><%= screening.status %></strong>
-    </p>
+<% if (screening.status === "COMPLETED") { %>
 
-    <p>
-        Total Resumes :
-        <strong><%= screening.total_resumes %></strong>
-    </p>
+    <div class="screening-complete-box">
 
-    <p>
-Completed :
-<strong id="completedCount">
-    <%= screening.completed_resumes %>
-</strong>
-</p>
+        <h2>
 
-<p>
-Failed :
-<strong id="failedCount">
-    <%= screening.failed_resumes %>
-</strong>
-</p>
+            ✓ Screening Completed
+
+        </h2>
+
+        <p>
+            <%= screening.completed_resumes %> completed •
+            <%= screening.failed_resumes %> failed
+        </p>
+
+        <a
+            class="view-results-btn"
+            href="/screenings/<%= screening.screening_id %>/results"
+        >
+
+            View Results →
+
+        </a>
+
+    </div>
 
     <hr>
 
-    <h2>Resumes</h2>
+<% } %>
+
+<h2 class="section-title">
+
+Resume Processing
+
+</h2>
 
     <% resumes.forEach(resume => { %>
 
-        <div class="resume-item">
+        <div class="progress-resume-card">
 
-            <span class="resume-name">
+    <div>
 
-                <%= resume.original_name %>
+        <strong>
 
-            </span>
+            <%= resume.original_name %>
 
-            <span class="resume-status">
+        </strong>
 
-                <%= resume.processing_status %>
+    </div>
 
-            </span>
+    <span class="progress-badge <%= resume.processing_status.toLowerCase() %>">
 
-        </div>
+        <%= resume.processing_status %>
+
+    </span>
+
+</div>
 
     <% }) %>
 

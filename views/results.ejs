@@ -19,12 +19,65 @@
 
     <hr>
 
+<div class="results-legend">
+
+    <div>
+
+        <strong>Decision:</strong>
+
+        <span class="decision strong-match">
+            STRONG MATCH
+        </span>
+
+        <span class="decision good-match">
+            GOOD MATCH
+        </span>
+
+        <span class="decision review">
+            REVIEW
+        </span>
+
+        <span class="decision reject">
+            REJECT
+        </span>
+
+    </div>
+
+    <br>
+
+    <div>
+
+        <strong>Score:</strong>
+
+        <span class="score-badge score-high">
+            8.0 - 10.0
+        </span>
+
+        <span class="score-badge score-good">
+            6.0 - 7.99
+        </span>
+
+        <span class="score-badge score-average">
+            4.0 - 5.99
+        </span>
+
+        <span class="score-badge score-low">
+            Below 4.0
+        </span>
+
+    </div>
+
+</div>
+
+    <br>
+
     <table class="results-table">
 
         <thead>
 
             <tr>
 
+                <th>Rank</th>
                 <th>Resume</th>
                 <th>Score</th>
                 <th>Decision</th>
@@ -36,15 +89,21 @@
 
         <tbody>
 
-        <% results.forEach(result => { %>
+        <% results.forEach((result,index) => { %>
 
             <tr>
 
                 <td>
 
+                    #<%= index + 1 %>
+
+                </td>
+
+                <td>
+
                     <a href="/screenings/result/<%= result.screening_resume_id %>">
 
-                    <%= result.original_name %>
+                        <%= result.original_name %>
 
                     </a>
 
@@ -52,21 +111,60 @@
 
                 <td>
 
-                    <%= result.score %> / 10
+                    <span
+                        class="score-badge <%= result.score >= 8
+                            ? 'score-high'
+                            : result.score >= 6
+                            ? 'score-good'
+                            : result.score >= 4
+                            ? 'score-average'
+                            : 'score-low'
+                        %>"
+                    >
+
+                        <%= Number(result.score).toFixed(2) %>
+
+                    </span>
 
                 </td>
 
                 <td>
 
-                    <%= result.decision %>
+                    <span
+                        class="decision <%= result.decision === 'STRONG_MATCH'
+                            ? 'strong-match'
+                            : result.decision === 'GOOD_MATCH'
+                            ? 'good-match'
+                            : result.decision === 'REVIEW'
+                            ? 'review'
+                            : 'reject'
+                        %>"
+                    >
+
+                        <%= result.decision %>
+
+                    </span>
 
                 </td>
 
-                <td>
+                <td class="confidence">
 
-                    <%= result.confidence %>%
+    <div class="confidence-bar">
 
-                </td>
+        <div
+            class="confidence-fill"
+            style="width: <%= result.confidence %>%"
+        ></div>
+
+    </div>
+
+    <span>
+
+        <%= result.confidence %>%
+
+    </span>
+
+</td>
 
             </tr>
 

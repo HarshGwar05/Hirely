@@ -5,6 +5,7 @@ import {
     saveScreeningResult
 } from "./screeningService.js";
 
+
 export const processMatching = async (
     screeningId,
     screeningResumeId,
@@ -20,7 +21,11 @@ export const processMatching = async (
         throw new Error("Screening not found.");
 
     }
-
+    console.log("\n========== CANDIDATE PROFILE ==========");
+console.log(
+    JSON.stringify(candidateProfile, null, 2)
+);
+console.log("=======================================\n");
     console.log("Sending to Gemini Stage 2...");
 
     const result = await matchCandidateWithJob(

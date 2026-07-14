@@ -14,7 +14,7 @@ const generateWithRetry = async (prompt) => {
 
             const response = await ai.models.generateContent({
 
-                model: "gemini-flash-latest",
+                model: "gemini-2.5-flash",
 
                 contents: prompt
 
@@ -24,15 +24,30 @@ const generateWithRetry = async (prompt) => {
 
         } catch (err) {
 
-            if (
-                err.status === 503 &&
-                attempt < maxRetries
-            ) {
+            const retryable =
+
+                err.status === 503 ||
+
+                err.status === 500 ||
+
+                err.status === 502 ||
+
+                err.status === 504 ||
+
+                err.cause?.code === "UND_ERR_CONNECT_TIMEOUT" ||
+
+                err.code === "ETIMEDOUT" ||
+
+                err.code === "ECONNRESET";
+
+            if (retryable && attempt < maxRetries) {
 
                 const waitTime = attempt * 5000;
 
                 console.log(
-                    `Gemini busy. Retrying in ${waitTime / 1000}s...`
+
+                    `Gemini temporarily unavailable. Retry ${attempt}/${maxRetries} in ${waitTime / 1000}s...`
+
                 );
 
                 await new Promise(resolve =>
@@ -102,20 +117,22 @@ export const matchCandidateWithJob = async (
 ) => {
 
 const prompt = `
-You are an expert ATS recruiter.
+You are an experienced technical recruiter.
 
-You will receive:
-1. A structured candidate profile.
-2. A job description.
+Evaluate the candidate holistically against the job description.
 
-Evaluate the candidate strictly against the job description.
+Do NOT reject a candidate only because a few technologies are missing.
+Consider:
+- relevant projects
+- transferable skills
+- education
+- practical experience
+- technical knowledge
+- problem-solving ability
+- overall potential
 
 Return ONLY valid JSON.
-No markdown.
-No explanations.
-No code fences.
 
-JSON Schema:
 {
   "score": 0.0,
   "decision": "",
@@ -127,53 +144,89 @@ JSON Schema:
   "missing_skills": [],
   "interview_questions": [],
   "improvement_suggestions": [],
-  "evidence": [
+  "evidence":[
     {
-      "requirement": "",
-      "evidence": ""
+      "requirement":"",
+      "evidence":""
     }
   ]
 }
 
-Rules:
+Rules
 
-- score: decimal between 0.0 and 10.0 using increments of 0.5 only.
-  10 = Exceptional fit
-  9 = Excellent
-  8 = Strong
-  7 = Good
-  6 = Acceptable
-  5 = Average
-  4 = Weak
-  2-3.5 = Poor
-  0-1.5 = No meaningful match
+1. Score must be between 0.0 and 10.0 (0.5 increments).
 
-- decision:
-  9.0-10.0 -> STRONG_MATCH
-  7.0-8.5 -> GOOD_MATCH
-  5.0-6.5 -> REVIEW
-  0.0-4.5 -> REJECT
+Score Guide
 
-- confidence represents confidence in YOUR evaluation, NOT candidate quality.
-  Use ONLY:
-  20, 40, 60, 75, 90, 100
+9-10
+Excellent fit.
+Most requirements satisfied.
+Strong projects and experience.
 
-  100 = Clear evidence for nearly all conclusions.
-  90 = Strong evidence with minor assumptions.
-  75 = Some assumptions required.
-  60 = Limited evidence.
-  40 = Weak evidence.
-  20 = Mostly guessing.
+7-8.5
+Good fit.
+Missing a few skills but can contribute immediately.
 
-- requirement_coverage: percentage (0-100) of explicit job requirements satisfied.
+5-6.5
+Partial fit.
+Has relevant knowledge/projects but lacks several required skills.
+Suitable for interview or further evaluation.
 
-- decision must always match the score.
+3-4.5
+Weak fit.
+Some transferable skills but major gaps.
 
-- Keep summary under 70 words.
+0-2.5
+Very poor fit.
+Almost no relevant evidence.
 
-- strengths, weaknesses, missing_skills, interview_questions and improvement_suggestions should contain 2-5 concise items.
+2. Decision
 
-- evidence should map each important job requirement to supporting resume evidence.
+9-10 -> STRONG_MATCH
+7-8.5 -> GOOD_MATCH
+5-6.5 -> REVIEW
+0-4.5 -> REJECT
+
+3. Confidence
+
+Use only:
+40
+60
+75
+90
+95
+
+Confidence means confidence in YOUR evaluation, not candidate quality.
+
+4. Requirement Coverage
+
+Estimate what percentage of explicit job requirements are satisfied.
+
+5. Summary
+
+Maximum 60 words.
+
+6. Lists
+
+strengths
+weaknesses
+missing_skills
+interview_questions
+improvement_suggestions
+
+Return 2-5 concise items.
+
+7. Evidence
+
+For every important job requirement provide resume evidence.
+If evidence is missing, explicitly state:
+"Not found in resume."
+
+8. Important
+
+Reward relevant academic projects, internships and transferable skills.
+
+Do NOT heavily penalize candidates for missing optional technologies if they demonstrate related knowledge.
 
 Candidate Profile:
 ${JSON.stringify(candidateProfile)}
@@ -183,7 +236,7 @@ ${jobDescription}
 `;
 
     const responseText =
-    await generateWithRetry(prompt);
+        await generateWithRetry(prompt);
 
     const cleanedResponse = responseText
         .replace(/```json/g, "")

@@ -1,14 +1,24 @@
 <div class="sidebar">
 
-    <h2>Resume Library</h2>
+    <div class="sidebar-header">
+
+        <h2>Hirely</h2>
+
+        <p>AI Resume Screener</p>
+
+    </div>
 
     <div class="selected-count">
-        Selected : <strong id="selectedCount">0</strong>
+
+        Selected :
+        <strong id="selectedCount">0</strong>
+
     </div>
 
     <input
         type="text"
-        placeholder="🔍 Search Resume..."
+        id="searchResume"
+        placeholder="Search resumes..."
         class="search-box"
     >
 
@@ -16,46 +26,52 @@
 
         <% resumes.filter(r => !r.is_archived).forEach(resume => { %>
 
-            <div class="resume-item">
+        <div class="resume-item">
 
-                <input
-                    class="resume-checkbox"
-                    type="checkbox"
-                    value="<%= resume.resume_id %>"
+            <input
+                class="resume-checkbox"
+                type="checkbox"
+                value="<%= resume.resume_id %>"
+            >
+
+            <span class="status <%= resume.status.toLowerCase() %>"></span>
+
+            <div class="resume-info">
+
+                <span
+                    class="resume-name"
+                    title="<%= resume.original_name %>"
                 >
+                    <%= resume.original_name %>
+                </span>
 
-                <span class="status <%= resume.status.toLowerCase() %>"></span>
+                <div class="resume-date">
 
-                <div class="resume-info">
-
-                    <span
-                        class="resume-name"
-                        title="<%= resume.original_name %>"
-                    >
-                        <%= resume.original_name %>
-                    </span>
-
-                    <div style="font-size:11px;color:#777;">
-                        <%= new Date(resume.uploaded_at).toLocaleDateString() %>
-                    </div>
+                    <%= new Date(resume.uploaded_at).toLocaleDateString() %>
 
                 </div>
 
-                <form
-                    action="/resumes/<%= resume.resume_id %>?_method=DELETE"
-                    method="POST"
-                    class="delete-form"
-                >
-                    <button
-                        type="submit"
-                        class="delete-btn"
-                        title="Delete (or Archive if used in a screening)"
-                    >
-                        🗑
-                    </button>
-                </form>
-
             </div>
+
+            <form
+                action="/resumes/<%= resume.resume_id %>?_method=DELETE"
+                method="POST"
+                class="delete-form"
+            >
+
+                <button
+                    type="submit"
+                    class="delete-btn"
+                    title="Delete"
+                >
+
+                    🗑
+
+                </button>
+
+            </form>
+
+        </div>
 
         <% }) %>
 
@@ -65,52 +81,56 @@
         class="archived"
         id="archiveToggle"
     >
+
         ▶ Archived (<%= resumes.filter(r => r.is_archived).length %>)
+
     </div>
 
     <div
-        class="archived-list"
         id="archiveList"
+        class="archived-list"
         style="display:none;"
     >
 
         <% resumes.filter(r => r.is_archived).forEach(resume => { %>
 
-            <div class="resume-item">
+        <div class="resume-item">
 
-    <span class="status <%= resume.status.toLowerCase() %>"></span>
+            <span class="status <%= resume.status.toLowerCase() %>"></span>
 
-    <div class="resume-info">
+            <div class="resume-info">
 
-        <span
-            class="resume-name"
-            title="<%= resume.original_name %>"
-        >
-            <%= resume.original_name %>
-        </span>
+                <span class="resume-name">
 
-        <div style="font-size:11px;color:#777;">
-            <%= new Date(resume.uploaded_at).toLocaleDateString() %>
+                    <%= resume.original_name %>
+
+                </span>
+
+                <div class="resume-date">
+
+                    <%= new Date(resume.uploaded_at).toLocaleDateString() %>
+
+                </div>
+
+            </div>
+
+            <form
+                action="/resumes/<%= resume.resume_id %>/restore"
+                method="POST"
+            >
+
+                <button
+                    class="restore-btn"
+                    type="submit"
+                >
+
+                    Restore
+
+                </button>
+
+            </form>
+
         </div>
-
-    </div>
-
-    <form
-        action="/resumes/<%= resume.resume_id %>/restore"
-        method="POST"
-    >
-
-        <button
-            type="submit"
-            class="restore-btn"
-            title="Restore Resume"
-        >
-            ↩ Restore
-        </button>
-
-    </form>
-
-</div>
 
         <% }) %>
 
@@ -124,31 +144,33 @@
     >
 
         <input
-            type="file"
-            id="resumeInput"
-            name="resumes"
-            accept=".pdf"
-            multiple
             hidden
+            id="resumeInput"
+            type="file"
+            name="resumes"
+            multiple
+            accept=".pdf"
         >
 
         <button
-            type="button"
             class="upload-btn"
+            type="button"
             onclick="document.getElementById('resumeInput').click()"
         >
+
             + Upload Resume
+
         </button>
 
     </form>
 
-    <button
-        id="startScreeningBtn"
-        class="screening-btn"
-        disabled
+    <a
+        href="/history"
+        class="history-btn"
     >
-        Start Screening
-    </button>
-    <a href="/history" class="history-btn">📋 Screening History</a>
+
+        Screening History
+
+    </a>
 
 </div>

@@ -9,11 +9,7 @@ export const dashboard = async (req, res) => {
 
         const resumes = await getAllResumes();
 
-        res.render("index", {
-            totalResumes: stats.totalResumes,
-            totalScreenings: stats.totalScreenings,
-            resumes
-        });
+        res.render("index", {stats,resumes});
 
     } catch (err) {
 

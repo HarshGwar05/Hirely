@@ -1,5 +1,93 @@
 <div class="dashboard">
 
+    <h2>Dashboard Statistics</h2>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <h3>Total Resumes</h3>
+
+            <p><%= stats.totalResumes %></p>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h3>Total Screenings</h3>
+
+            <p><%= stats.totalScreenings %></p>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h3>Candidates Screened</h3>
+
+            <p><%= stats.totalCandidates %></p>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h3>Average Score</h3>
+
+            <p><%= stats.averageScore ?? "-" %></p>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h3>Highest Score</h3>
+
+            <p><%= stats.highestScore ?? "-" %></p>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h3>Lowest Score</h3>
+
+            <p><%= stats.lowestScore ?? "-" %></p>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h3>Strong Matches</h3>
+
+            <p><%= stats.strongMatches %></p>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h3>Good Matches</h3>
+
+            <p><%= stats.goodMatches %></p>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h3>Review</h3>
+
+            <p><%= stats.reviewCandidates %></p>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h3>Rejected Candidates</h3>
+
+            <p><%= stats.rejectedCandidates %></p>
+
+        </div>
+
+    </div>
+
+    <hr>
+
     <h2>Start New Screening</h2>
 
     <div class="form-group">
@@ -40,7 +128,7 @@
 
     <button
         id="analyseBtn"
-        disabled
+        
     >
         Start Analysis
     </button>

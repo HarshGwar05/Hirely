@@ -15,175 +15,293 @@
 
 <div class="dashboard">
 
-<h1><%= result.original_name %></h1>
+<div class="report-hero">
+
+    <div>
+
+        <h1><%= result.original_name %></h1>
+
+        <p class="report-subtitle">
+
+            AI Candidate Evaluation Report
+
+        </p>
+
+    </div>
+
+    <%
+let scoreColor = "score-red";
+
+if(result.decision === "STRONG_MATCH"){
+
+    scoreColor = "score-green";
+
+}
+else if(result.decision === "GOOD_MATCH"){
+
+    scoreColor = "score-blue";
+
+}
+else if(result.decision === "REVIEW"){
+
+    scoreColor = "score-orange";
+
+}
+%>
+
+<div class="score-circle <%= scoreColor %>">
+
+    <span>
+
+        <%= Number(result.score).toFixed(1) %>
+
+    </span>
+
+    <small>/10</small>
+
+</div>
+
+</div>
+
+<div class="metrics-grid">
+
+    <div class="metric-card">
+
+        <h4>Decision</h4>
+
+        <span class="decision <%= result.decision === 'STRONG_MATCH'
+            ? 'strong-match'
+            : result.decision === 'GOOD_MATCH'
+            ? 'good-match'
+            : result.decision === 'REVIEW'
+            ? 'review'
+            : 'reject'
+        %>">
+
+            <%= result.decision.replace("_"," ") %>
+
+        </span>
+
+    </div>
+
+    <div class="metric-card">
+
+        <h4>Confidence</h4>
+
+        <div class="confidence-bar">
+
+            <div
+                class="confidence-fill"
+                style="width:<%= result.confidence %>%"
+            ></div>
+
+        </div>
+
+        <p><%= result.confidence %>%</p>
+
+    </div>
+
+    <div class="metric-card">
+
+        <h4>Requirement Coverage</h4>
+
+        <div class="confidence-bar">
+
+            <div
+                class="confidence-fill"
+                style="width:<%= result.requirement_coverage %>%"
+            ></div>
+
+        </div>
+
+        <p><%= result.requirement_coverage %>%</p>
+
+    </div>
+
+</div>
+<hr>
+<div class="section-card">
+
+    <h2>Summary</h2>
+
+    <p>
+
+        <%= result.analysis_json.summary %>
+
+    </p>
+</div>
 
 <hr>
 
-<h2>Overall Evaluation</h2>
 
-<p>
 
-<b>Score :</b>
+<div class="three-column-grid">
 
-<%= result.score %> / 10
+    <div class="section-card">
 
-</p>
+        <h2>Strengths</h2>
 
-<p>
+        <% result.analysis_json.strengths.forEach(item=>{ %>
 
-<b>Decision :</b>
+            <div class="feature success">
 
-<%= result.decision %>
+                ✓ <%= item %>
 
-</p>
+            </div>
 
-<p>
+        <% }) %>
 
-<b>Confidence :</b>
+    </div>
 
-<%= result.confidence %>%
+    <div class="section-card">
 
-</p>
+        <h2>Weaknesses</h2>
 
-<p>
+        <% result.analysis_json.weaknesses.forEach(item=>{ %>
 
-<b>Requirement Coverage :</b>
+            <div class="feature warning">
 
-<%= result.requirement_coverage %>%
+                ⚠ <%= item %>
 
-</p>
+            </div>
 
-<hr>
+        <% }) %>
 
-<h2>Summary</h2>
+    </div>
 
-<p>
+    <div class="section-card">
 
-<%= result.analysis_json.summary %>
+        <h2>Missing Skills</h2>
 
-</p>
+        <% result.analysis_json.missing_skills.forEach(item=>{ %>
 
-<hr>
+            <div class="feature danger">
 
-<h2>Strengths</h2>
+                ✖ <%= item %>
 
-<ul>
+            </div>
 
-<% result.analysis_json.strengths.forEach(item=>{ %>
+        <% }) %>
 
-<li>
+    </div>
 
-<%= item %>
+</div>
 
-</li>
+<div class="section-card">
 
-<% }) %>
+    <h2>Requirement Evidence</h2>
 
-</ul>
+    <table class="evidence-table">
 
-<hr>
+        <thead>
 
-<h2>Weaknesses</h2>
+            <tr>
 
-<ul>
+                <th>Requirement</th>
 
-<% result.analysis_json.weaknesses.forEach(item=>{ %>
+                <th>Resume Evidence</th>
 
-<li>
+            </tr>
 
-<%= item %>
+        </thead>
 
-</li>
+        <tbody>
 
-<% }) %>
+        <% result.analysis_json.evidence.forEach(item=>{ %>
 
-</ul>
+            <tr>
 
-<hr>
+                <td>
 
-<h2>Missing Skills</h2>
+                    <strong>
 
-<ul>
+                        <%= item.requirement %>
 
-<% result.analysis_json.missing_skills.forEach(item=>{ %>
+                    </strong>
 
-<li>
+                </td>
 
-<%= item %>
+                <td>
 
-</li>
+                    <%= item.evidence %>
 
-<% }) %>
+                </td>
 
-</ul>
+            </tr>
 
-<hr>
+        <% }) %>
 
-<h2>Evidence</h2>
+        </tbody>
 
-<ul>
+    </table>
 
-<% result.analysis_json.evidence.forEach(item=>{ %>
+</div>
 
-<li>
 
-<b><%= item.requirement %></b>
-
-<br>
-
-<%= item.evidence %>
-
-</li>
-
-<% }) %>
-
-</ul>
-
-<hr>
+<div class="section-card">
 
 <h2>Interview Questions</h2>
 
-<ul>
+<div class="question-grid">
 
-<% result.analysis_json.interview_questions.forEach(item=>{ %>
+<% result.analysis_json.interview_questions.forEach((item,index)=>{ %>
 
-<li>
+<div class="question-card">
+
+<div class="question-number">
+
+<%= index+1 %>
+
+</div>
+
+<p>
 
 <%= item %>
 
-</li>
+</p>
+
+</div>
 
 <% }) %>
 
-</ul>
+</div>
 
-<hr>
+</div>
+
+<div class="section-card">
 
 <h2>Improvement Suggestions</h2>
 
-<ul>
-
 <% result.analysis_json.improvement_suggestions.forEach(item=>{ %>
 
-<li>
+<div class="suggestion-card">
+
+💡
+
+<span>
 
 <%= item %>
 
-</li>
+</span>
+
+</div>
 
 <% }) %>
 
-</ul>
+</div>
 
-<br>
+<div class="back-container">
 
 <a
 href="javascript:history.back()"
+class="back-btn"
 >
 
-← Back
+← Back to Results
 
 </a>
+
+</div>
 
 </div>
 
