@@ -103,7 +103,17 @@ ${resumeText}
     .replace(/```/g, "")
     .trim();
 
-    return JSON.parse(cleanedResponse);
+    try {
+
+        return JSON.parse(cleanedResponse);
+
+    } catch (err) {
+
+        console.error("Failed to parse Gemini Stage 1 response:", cleanedResponse);
+
+        throw new Error("Gemini returned malformed JSON during resume parsing.");
+
+    }
 
 };
 
@@ -243,6 +253,16 @@ ${jobDescription}
         .replace(/```/g, "")
         .trim();
 
-    return JSON.parse(cleanedResponse);
+    try {
+
+        return JSON.parse(cleanedResponse);
+
+    } catch (err) {
+
+        console.error("Failed to parse Gemini Stage 2 response:", cleanedResponse);
+
+        throw new Error("Gemini returned malformed JSON during candidate matching.");
+
+    }
 
 };

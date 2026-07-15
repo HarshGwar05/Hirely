@@ -13,7 +13,12 @@ import {
 
 
 export const processScreening = async (screeningId) => {
-    console.log("PROCESS SCREENING STARTED:",screeningId);
+
+    if (process.env.DEBUG) {
+
+        console.log("PROCESS SCREENING STARTED:", screeningId);
+
+    }
 
     try {
 
@@ -41,9 +46,13 @@ const parsedResume = await getParsedResume(
 
 if (!parsedResume) {
 
-    console.log(
-        `ParsedResume missing for ${resume.resume_id}`
-    );
+    if (process.env.DEBUG) {
+
+        console.log(
+            `ParsedResume missing for ${resume.resume_id}`
+        );
+
+    }
 
     await updateScreeningResumeStatus(
         resume.screening_resume_id,
@@ -68,9 +77,13 @@ if (
     Object.keys(candidateProfile).length === 0
 ) {
 
-    console.log(
-        `Candidate profile missing for ${resume.resume_id}`
-    );
+    if (process.env.DEBUG) {
+
+        console.log(
+            `Candidate profile missing for ${resume.resume_id}`
+        );
+
+    }
 
     await updateScreeningResumeStatus(
         resume.screening_resume_id,
@@ -90,8 +103,12 @@ if (
                     "MATCHING"
                 );
                 
-                console.log("Calling Stage 2:", resume.screening_resume_id);
-                
+                if (process.env.DEBUG) {
+
+                    console.log("Calling Stage 2:", resume.screening_resume_id);
+
+                }
+
                 await processMatching(
 
                     screeningId,
@@ -101,7 +118,12 @@ if (
                     candidateProfile
 
                 );
-                console.log("Stage 2 Finished:", resume.screening_resume_id);
+
+                if (process.env.DEBUG) {
+
+                    console.log("Stage 2 Finished:", resume.screening_resume_id);
+
+                }
 
                 await updateScreeningResumeStatus(
                     resume.screening_resume_id,
@@ -147,4 +169,3 @@ if (
     }
 
 };
-

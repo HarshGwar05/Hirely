@@ -21,12 +21,16 @@ export const processMatching = async (
         throw new Error("Screening not found.");
 
     }
-    console.log("\n========== CANDIDATE PROFILE ==========");
-console.log(
-    JSON.stringify(candidateProfile, null, 2)
-);
-console.log("=======================================\n");
-    console.log("Sending to Gemini Stage 2...");
+    if (process.env.DEBUG) {
+
+        console.log("\n========== CANDIDATE PROFILE ==========");
+        console.log(
+            JSON.stringify(candidateProfile, null, 2)
+        );
+        console.log("=======================================\n");
+        console.log("Sending to Gemini Stage 2...");
+
+    }
 
     const result = await matchCandidateWithJob(
 
@@ -35,9 +39,13 @@ console.log("=======================================\n");
         screening.job_description
 
     );
-    
-    console.log("Gemini Stage 2 finished.");
-console.log(result);
+
+    if (process.env.DEBUG) {
+
+        console.log("Gemini Stage 2 finished.");
+        console.log(result);
+
+    }
 
     await saveScreeningResult(
 

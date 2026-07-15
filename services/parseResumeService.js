@@ -27,6 +27,16 @@ export const extractResumeText = async (filePath) => {
 
     }
 
-    return fullText.trim();
+    const trimmedText = fullText.trim();
+
+    if (!trimmedText) {
+
+        throw new Error(
+            "Unreadable PDF: no extractable text found (likely a scanned or image-only resume)."
+        );
+
+    }
+
+    return trimmedText;
 
 };
